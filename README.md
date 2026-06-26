@@ -8,6 +8,8 @@ This project is meant to be modular, and designed so that the Macro Server (what
 ### Central
 The main hub for communications. The central server is told what macro servers are avaliable, hosts the client, and communicates with the client the list of servers.
 
+This is meant to be running on a seperate device on your local network, such as a raspberry pi
+
 ### Client
 
 The vite built swipe gesture interface. Communicates with a macro server to deliver run commands and recieves updates about the program state. It is deployed on the central server.
