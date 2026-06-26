@@ -19,3 +19,6 @@ Runs on each host computer, and communicates with the client. When it recieves r
 Plugins are used to listen for program specific events and update the registry, a list of key value pairs that can be used conditionally to show or hide macros on the client. 
 
 The data folder contains the list of macros in data.ts, and types for the data. This folder is kept in this repository for reference on the structure, but it should be replaced for your use case. 
+
+### Macros
+For examples of macros to be put in macroserver/hotkeys/macros, you can view my personal set of macros, kept on [a seperate repository](https://github.com/Tommyhetrick/MacroMaster-Macros)
