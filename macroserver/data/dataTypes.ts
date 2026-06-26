@@ -37,10 +37,15 @@ export type LockOption = {
     behavior: LockOptionBehavior
 }
 
+export type ProgramStringMatchable = ValidProgramNames[] | ValidProgramNames | RegExp;
+
 export type Macro = {
     combo: string,
     name: string,
-    valid: ValidProgramNames[] | ValidProgramNames | RegExp,
+    valid: {
+        prog?: ProgramStringMatchable,
+        conditions?: string[]
+    };
     canExecute?: boolean,
     lock?: LockBehavior
 }

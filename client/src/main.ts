@@ -1,12 +1,12 @@
 import p5 from 'p5'
 import './style.css'
 import { Tree } from './Tree';
-import type { DataInput } from '../../macroserver/data/dataTypes';
+import type { DataInput, ProgramStringMatchable } from '../../macroserver/data/dataTypes';
 import { Logger } from './Logger';
 
 export const centralServer = `ws://${window.location.host}/client`;
 
-const supportDataVersion = 3;
+const supportDataVersion = 4;
 
 let selectedClient = "";
 
@@ -43,7 +43,6 @@ const sketch = (p: p5) => {
           logger.add('Exited early');
           reset();
         } else if (msg.type == 'stateUpdate') {
-          console.log(msg);
           currentProgram = msg.data.name;
           registry = msg.data.registry;
           console.log(registry);
@@ -361,27 +360,60 @@ export const getCurrentTree = () : Tree | undefined => {
 
 let buildTree = (data: DataInput) => {
   if (data) {
-    let filteredEntries = Object.entries(data.macros).filter(v => {
+      let filteredEntries = Object.entries(data.macros).filter(v => {
 
-      let validIn = v[1].valid;
-      
-      if (validIn instanceof Array) {
-        //@ts-expect-error
-        return validIn.includes(currentProgram);
-      }
+        let matchesName = true;
 
-      let matcher : RegExp | string = validIn;
+        let validIn = v[1].valid;
 
-      try {
-        matcher = new RegExp(validIn);
-        return !!currentProgram.match(matcher);
-      } catch (e) {
-        return currentProgram == validIn;
-      }
-    });
+        console.log('ON TO ' + v[0] + "   " +  validIn.prog);
+        if (validIn.prog) {
+          matchesName = matchProgramString(validIn.prog);
+        }
+
+        let matchesConditions = true;
+
+        if (validIn.conditions) {
+          validIn.conditions.forEach(c => {
+            let cond = c;
+
+            for (let rk in registry) {
+              cond = cond.replaceAll(`%r${rk}%`, `"${registry[rk]}"`);
+            }
+
+            console.log(cond);
+            try {
+              matchesConditions = new Function(cond)();
+            } catch (e) {
+              console.error('Error in condition ' + cond + ': ' + e);
+            }
+          });
+        }
+
+        return matchesName && matchesConditions;
+      });
 
     let filteredMacros = Object.fromEntries(filteredEntries);
+
+    console.log(filteredMacros);
     rootTree = new Tree(filteredMacros);
+  }
+}
+
+export const matchProgramString = (matchable: ProgramStringMatchable) => {
+  if (matchable instanceof Array) {
+    console.log(matchable, currentProgram);
+    //@ts-expect-error
+    return matchable.includes(currentProgram);
+  }
+
+  let matcher : RegExp | string = matchable;
+
+  try {
+    matcher = new RegExp(matchable);
+    return !!currentProgram.match(matcher);
+  } catch (e) {
+    return currentProgram == matchable;
   }
 }
 
