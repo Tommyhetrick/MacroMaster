@@ -1,0 +1,22 @@
+{
+  "folders": [
+    {
+      "path": ".",
+      "name": "root"
+    },
+    { "path": "central" },
+    { "path": "client" },
+    { "path": "macroserver"},
+    { 
+      "path": "macroserver/hotkeys/macros", 
+      "name": "macros" 
+    }
+  ],
+  "settings": {
+    "files.exclude": {
+      "central/": true,
+      "client/": true,
+      "macroserver/": true,
+    }
+  }
+}

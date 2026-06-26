@@ -1,0 +1,37 @@
+Press
+    ...Release
+        canExecute?
+            y: execute currentPath
+            n: Nothing
+    ...Lock
+        release behavior?
+            EXECUTE:
+                ...Release
+                    ...currentOption?
+                        y
+                            Option Behavior?
+                                HOLD: execute currentPath + currentOption + "_h"
+                                EXECUTE: execute+r currentPath + currentOption + "_r"
+                        n: execute+r currentPath
+            STAY:
+                execute currentPath + "_h"
+                ...currentOption?
+                        y
+                            Option Behavior?
+                                HOLD: execute currentPath + currentOption + "_h"
+                                EXECUTE: execute+r currentPath + currentOption + "_r"
+                        n: execute+r currentPath
+                ...Tap
+                    currentOption?
+                        y: execute currentPath + currentOption + "_r"
+                        n: Nothing
+                    execute+r currentPath + "_r"
+                ...Release
+                    ...currentOption?
+                        y
+                            Option Behavior?
+                                HOLD: execute currentPath + currentOption + "_h"
+                                EXECUTE: execute+r currentPath + currentOption + "_r"
+                        n: execute+r currentPath
+                    
+

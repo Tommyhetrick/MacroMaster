@@ -1,0 +1,7 @@
+_BACKUP
+**/node_modules
+**/.vscode
+**/package-lock.json
+central/webapp
+central/dist
+macroserver/hotkeys/macros

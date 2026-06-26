@@ -1,0 +1,21 @@
+{
+  "name": "client",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host",
+    "build": "tsc && vite build --emptyOutDir",
+    "preview": "vite preview",
+    "sync": "tsx scripts/sync-data.ts"
+  },
+  "devDependencies": {
+    "typescript": "~6.0.2",
+    "vite": "^8.0.12"
+  },
+  "dependencies": {
+    "@types/p5": "^1.7.7",
+    "p5": "^2.3.0",
+    "vite-plugin-external": "^6.2.2"
+  }
+}
