@@ -2,6 +2,8 @@ import { ahkPath } from "..";
 import { EventPlugin, IEventPlugin, RegistryList } from "../PluginManager";
 import { spawn } from "child_process";
 
+export const autoInit = false;
+
 export default class PremiereEventPlugin extends EventPlugin implements IEventPlugin {
 
     panelMappings: Map<string, string> = new Map();
@@ -17,7 +19,7 @@ export default class PremiereEventPlugin extends EventPlugin implements IEventPl
             let onInitScript = spawn(ahkPath, [`./hotkeys/macros/${name}/_onInit.ahk`]);
                 
             onInitScript.on('spawn', () => {
-                console.log('Launched onInit script');
+                console.log('Launched premiere onInit ahk script');
             });
     
             onInitScript.stdout.on('data', (data) => {

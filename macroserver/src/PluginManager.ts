@@ -1,3 +1,6 @@
+import { data } from "../data";
+import { currentProgramName } from "./setupUpdateProg";
+
 export type StateUpdateData = {
     name: {
         data: string,
@@ -19,7 +22,7 @@ export class EventPlugin implements IEventPlugin {
         this.name = this.name;
     }
 
-    async onInit(uConId: string) {
+    async onInit(name: string) {
         
     };
 
@@ -55,31 +58,36 @@ export class PluginManager {
         }
     }
 
-    async getPlugin(name: string) : Promise<EventPlugin | undefined> {
+    async getPlugin(name: string, alwaysCreate: boolean = false) : Promise<EventPlugin | undefined> {
         let existingPlugin = this.store.get(name);
         if (existingPlugin) {
             return existingPlugin;
         } else {
             try {
-                let myMod = await import(`./plugins/${name}.ts`)
-                let pluginInstance : EventPlugin = new myMod.default();
+                let myMod = await import(`./plugins/${name}.ts`);
 
-                this.store.set(name, pluginInstance);
+                let pluginInstance : EventPlugin = new myMod.default(name);
 
-                await pluginInstance.onInit(name);
+                let autoInit = true;
 
-                pluginInstance.hasInit = true;
-                
-                console.log('done init');
+                if (myMod.autoInit != undefined) {
+                    autoInit = myMod.autoInit;
+                }
 
-                return pluginInstance;
+                if (autoInit || alwaysCreate) {
+                    this.store.set(name, pluginInstance);
+    
+                    await pluginInstance.onInit(name);
+                    pluginInstance.hasInit = true;
+                    return pluginInstance;
+                }
+                return undefined;
             } catch (e) {}
             return undefined;
         }
     }
 
     async handleStateUpdate(update: StateUpdateData) {
-
         let plugin = await this.getPlugin(update.name.data);
 
         if (!plugin?.hasInit) {

@@ -29,7 +29,18 @@ export const setupClientWss = () => {
     
         socket.on('message', (m) => {
             let msg = m.toString();
-            sendRunCommand(msg);
+
+            if (msg == '$menu_killServer') {
+                process.exit();
+            } else if (msg == '$menu_manualInit') {
+                PluginManager.get().getPlugin(currentProgramName, true).then(async p =>{
+                    if (p) {
+                        console.log(currentProgramName + ' was manually initialized');
+                    }
+                });
+            } else {
+                sendRunCommand(msg);
+            }
         });
     });
 }

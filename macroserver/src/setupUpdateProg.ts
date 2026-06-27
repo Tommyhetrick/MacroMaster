@@ -24,11 +24,13 @@ export const setupUpdateProg = () => {
                 c.send(msg);
             });
         } else if (msg.type == 'stateUpdate') {
+
             let pluginManager = PluginManager.get();
+
             await pluginManager.handleStateUpdate(msg.data);
-            //sendProgUpdate(msg);
 
             currentProgramName = msg.data.name.data;
+            console.log('Switched to ' + currentProgramName);
 
             wss.clients.forEach(c => {
                 c.send(JSON.stringify({

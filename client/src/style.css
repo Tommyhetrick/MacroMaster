@@ -12,6 +12,11 @@ html, body {
   width: 100vw;
 }
 
+#showMenu {
+  width: 30vw;
+  height: 8vh;
+}
+
 .server-item {
   width: 50vw;
   margin: auto;

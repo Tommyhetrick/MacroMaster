@@ -1,19 +1,15 @@
 import { createMacroMap, type ProgramList, type DataConfig } from "./dataTypes";
 
-export const dataVersion = 4;
+export const dataVersion = 5;
 
-export const config : DataConfig= {
+export const config : DataConfig = {
     PORT: "5137",
     serverName: 'dev-pc'
 }
 
 export const Programs = {
     "adobe premiere pro": { 
-        name: 'premiere',
-        events: {
-            onInit: true,
-            onChangeClassNN: true
-        }
+        name: 'premiere'
     },
     "opera": { 
         name: 'opera' 

@@ -60,13 +60,7 @@ export type DataConfig = {
 }
 
 export type Program = {
-    name: string,
-    events?: {
-        onInit?: boolean,
-        onChangeTitle?: boolean,
-        onChangeClassNN?: boolean
-    }
-
+    name: string
 }
 
 export type ProgramList = {[key: string]: Program};

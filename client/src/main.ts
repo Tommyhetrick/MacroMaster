@@ -6,7 +6,7 @@ import { Logger } from './Logger';
 
 export const centralServer = `ws://${window.location.host}/client`;
 
-const supportDataVersion = 4;
+const supportDataVersion = 5;
 
 let selectedClient = "";
 
@@ -26,6 +26,8 @@ export let swipe : [number, number][] = [];
 let maxTouches = 0;
 
 let locked = false;
+
+let showingMenu = false;
 
 export const logger = new Logger(10);
 
@@ -67,7 +69,19 @@ const sketch = (p: p5) => {
     })();
 
     let ref = Math.min(p.windowWidth, p.windowHeight);
+
     p.createCanvas(ref*0.9,ref*0.9);
+
+    let menuBtn = document.createElement('button');
+
+    menuBtn.id = "showMenu";
+    menuBtn.textContent = 'Menu';
+
+    menuBtn.addEventListener('click', () => {
+      showingMenu = !showingMenu;
+    });
+
+    document.getElementById('showMenuDiv')!.appendChild(menuBtn);
   }
 
   p.draw = () => {
@@ -90,6 +104,47 @@ const sketch = (p: p5) => {
       p.fill(0);
       p.text("Disconnected", p.width/2, p.height/2);
       p.pop();
+      return;
+    }
+
+    if (showingMenu) {
+      p.background(150);
+
+      p.push();
+
+      for (let i=0;i<2;i++) {
+        for (let j=0;j<2;j++) {
+          p.stroke(0);
+          p.fill(150);
+          p.rect(i * p.width/2, j * p.width/2, p.width/2, p.height/2);
+        }
+      }
+
+      p.textAlign(p.CENTER, p.CENTER);
+      p.textSize(p.height/6);
+      p.fill(0);
+      p.text("MENU", p.width/2, p.height/2);
+
+      p.textSize(p.height/15);
+      p.text("Kill Server", p.width/4, p.height/4);
+      p.text("Manual Init", 3*p.width/4, 3*p.height/4);
+
+      p.pop();
+
+      if (p.mouseIsPressed && p.touches.length < 3) {
+        let xGrid = Math.floor(p.mouseX / (p.width/2));
+        let yGrid = Math.floor(p.mouseY / (p.height/2));
+        let gInd = 2 * yGrid + xGrid;
+
+        switch (gInd) {
+          case 0:
+            executeAndReset('$menu_killServer');
+            break;
+          case 3:
+            executeAndReset('$menu_manualInit');
+            break;
+        }
+      }
       return;
     }
 
@@ -317,9 +372,12 @@ export const execute = (ident?: string) => {
 
 export const reset = () => {
 
+  showingMenu = false;
+
   locked = false;
 
   resetSwipe();
+
   let currentTree = getCurrentTree();
   if (currentTree) {
     currentTree.currentOption = undefined
